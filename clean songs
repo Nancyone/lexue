@@ -1,0 +1,61 @@
+import json
+import os
+import os.path
+import csv
+
+
+import re
+f=open('/Users/陈利琴/Desktop/儿歌.txt','r',encoding='utf8')
+text=f.read()
+f.close()
+#将黏贴的数据按照data分割
+copy = text.split('data')
+del copy[0]
+#定义歌曲名字的清洗函数
+def cleannames(a):
+    songs=a.split(',')
+    names = []
+    for i in songs:
+        s='"name":"'
+        if s in i:
+            i = re.sub("[A-Za-z0-9\!\%\[\]\,\。\n]", "", i)
+            i=i.replace(" ", "")
+            i = re.sub(r'[^\w\s]','',i)
+            names.append(i)
+    return names
+    print('---------------')
+#定义歌手名字的清洗函数    
+def cleansingers(a):
+    songs=a.split(',')
+    singers = []
+    for i in songs:
+        s='"singer":"'
+        if s in i:
+            i = re.sub("[A-Za-z0-9\!\%\[\]\,\。\n]", "", i)
+            i=i.replace(" ", "")
+            i = re.sub(r'[^\w\s]','',i)
+            #print(i)
+            singers.append(i)
+    return singers   
+
+#将分割的歌名与歌手关联
+playlists = []
+a=0
+while a < len(copy):
+    names = cleannames(copy[a])
+    singers = cleansingers(copy[a])
+    del names[0]
+    #print(names)
+    count = len(names)
+    #print(count)
+    b=0
+    while b < count:    
+        playlist = names[b]+'-'+singers[b]
+        b += 1
+        #print(playlist)
+        playlists.append(playlist)
+    a += 1
+
+for c in playlists:
+    print(c)
+print(len(playlists))
